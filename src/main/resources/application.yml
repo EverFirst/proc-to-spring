@@ -1,1 +1,28 @@
-spring.application.name=claim
+spring:
+  # Datasource 설정
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@localhost:1521:orcl
+    username: your_username
+    password: your_password
+    
+  # Batch 설정
+  batch:
+    job:
+      enabled: false  # 자동 실행 방지
+    jdbc:
+      initialize-schema: always
+      
+# MyBatis 설정
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    
+# 로깅 설정
+logging:
+  level:
+    root: INFO
+    com.proc.claim: DEBUG
+
+# 주의: DB 연결 정보(url, username, password)는 실제 환경에 맞게 변경해야 합니다.
