@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.proc.claim.mapper.CommonMapper">
+
+    <select id="selectCommonCodeList" parameterType="String" resultType="com.proc.claim.model.entity.CommonCode">
+        SELECT 
+            CODE,
+            GROUP_CODE,
+            CODE_NAME,
+            DESCRIPTION,
+            USE_YN,
+            CREATED_BY,
+            CREATED_AT,
+            UPDATED_BY,
+            UPDATED_AT
+        FROM 
+            TB_COMMON_CODE
+        WHERE 
+            GROUP_CODE = #{groupCode}
+            AND USE_YN = 'Y'
+        ORDER BY 
+            CODE ASC
+    </select>
+
+    <select id="selectCommonCode" parameterType="String" resultType="com.proc.claim.model.entity.CommonCode">
+        SELECT 
+            CODE,
+            GROUP_CODE,
+            CODE_NAME,
+            DESCRIPTION,
+            USE_YN,
+            CREATED_BY,
+            CREATED_AT,
+            UPDATED_BY,
+            UPDATED_AT
+        FROM 
+            TB_COMMON_CODE
+        WHERE 
+            CODE = #{code}
+    </select>
+
+    <insert id="insertCommonCode" parameterType="com.proc.claim.model.entity.CommonCode">
+        INSERT INTO TB_COMMON_CODE (
+            CODE,
+            GROUP_CODE,
+            CODE_NAME,
+            DESCRIPTION,
+            USE_YN,
+            CREATED_BY,
+            CREATED_AT
+        ) VALUES (
+            #{code},
+            #{groupCode},
+            #{codeName},
+            #{description},
+            #{useYn},
+            #{createdBy},
+            SYSDATE
+        )
+    </insert>
+
+    <update id="updateCommonCode" parameterType="com.proc.claim.model.entity.CommonCode">
+        UPDATE TB_COMMON_CODE
+        SET 
+            CODE_NAME = #{codeName},
+            DESCRIPTION = #{description},
+            USE_YN = #{useYn},
+            UPDATED_BY = #{updatedBy},
+            UPDATED_AT = SYSDATE
+        WHERE 
+            CODE = #{code}
+    </update>
+
+    <delete id="deleteCommonCode" parameterType="String">
+        UPDATE TB_COMMON_CODE
+        SET 
+            USE_YN = 'N',
+            UPDATED_BY = #{updatedBy},
+            UPDATED_AT = SYSDATE
+        WHERE 
+            CODE = #{code}
+    </delete>
+
+</mapper>
