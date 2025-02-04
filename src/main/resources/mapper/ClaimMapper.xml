@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.proc.claim.mapper.ClaimMapper">
+
+    <select id="selectClaimMaster" parameterType="string" resultType="com.proc.claim.model.entity.ClaimMaster">
+        SELECT 
+            CLAIM_ID,
+            PATIENT_ID,
+            HOSPITAL_ID,
+            CLAIM_DATE,
+            TOTAL_AMOUNT,
+            STATUS_CODE,
+            PROCESSING_YN,
+            PROCESSED_DATE,
+            ERROR_CODE,
+            ERROR_MESSAGE,
+            CREATED_BY,
+            CREATED_AT,
+            UPDATED_BY,
+            UPDATED_AT
+        FROM 
+            TB_CLAIM_MST
+        WHERE 
+            CLAIM_ID = #{claimId}
+    </select>
+
+    <select id="selectUnprocessedClaims" parameterType="int" resultType="com.proc.claim.model.entity.ClaimMaster">
+        SELECT 
+            CLAIM_ID,
+            PATIENT_ID,
+            HOSPITAL_ID,
+            CLAIM_DATE,
+            TOTAL_AMOUNT,
+            STATUS_CODE,
+            PROCESSING_YN
+        FROM 
+            TB_CLAIM_MST
+        WHERE 
+            PROCESSING_YN = 'N'
+            AND STATUS_CODE = '01'
+        ORDER BY 
+            CLAIM_DATE ASC
+        FETCH FIRST #{limit} ROWS ONLY
+    </select>
+
+    <select id="selectClaimDetails" parameterType="string" resultType="com.proc.claim.model.entity.ClaimDetail">
+        SELECT 
+            CLAIM_ID,
+            CLAIM_DETAIL_ID,
+            TREATMENT_CODE,
+            TREATMENT_DATE,
+            QUANTITY,
+            UNIT_PRICE,
+            AMOUNT,
+            STATUS_CODE,
+            ERROR_CODE,
+            ERROR_MESSAGE,
+            CREATED_BY,
+            CREATED_AT,
+            UPDATED_BY,
+            UPDATED_AT
+        FROM 
+            TB_CLAIM_DTL
+        WHERE 
+            CLAIM_ID = #{claimId}
+    </select>
+
+    <insert id="insertClaimMaster" parameterType="com.proc.claim.model.entity.ClaimMaster">
+        INSERT INTO TB_CLAIM_MST (
+            CLAIM_ID,
+            PATIENT_ID,
+            HOSPITAL_ID,
+            CLAIM_DATE,
+            TOTAL_AMOUNT,
+            STATUS_CODE,
+            PROCESSING_YN,
+            CREATED_BY,
+            CREATED_AT
+        ) VALUES (
+            #{claimId},
+            #{patientId},
+            #{hospitalId},
+            #{claimDate},
+            #{totalAmount},
+            #{statusCode},
+            #{processingYn},
+            #{createdBy},
+            SYSDATE
+        )
+    </insert>
+
+    <insert id="insertClaimDetail" parameterType="com.proc.claim.model.entity.ClaimDetail">
+        INSERT INTO TB_CLAIM_DTL (
+            CLAIM_ID,
+            CLAIM_DETAIL_ID,
+            TREATMENT_CODE,
+            TREATMENT_DATE,
+            QUANTITY,
+            UNIT_PRICE,
+            AMOUNT,
+            STATUS_CODE,
+            CREATED_BY,
+            CREATED_AT
+        ) VALUES (
+            #{claimId},
+            #{claimDetailId},
+            #{treatmentCode},
+            #{treatmentDate},
+            #{quantity},
+            #{unitPrice},
+            #{amount},
+            #{statusCode},
+            #{createdBy},
+            SYSDATE
+        )
+    </insert>
+
+    <update id="updateClaimMaster" parameterType="com.proc.claim.model.entity.ClaimMaster">
+        UPDATE TB_CLAIM_MST
+        SET 
+            TOTAL_AMOUNT = #{totalAmount},
+            STATUS_CODE = #{statusCode},
+            PROCESSING_YN = #{processingYn},
+            PROCESSED_DATE = #{processedDate},
+            ERROR_CODE = #{errorCode},
+            ERROR_MESSAGE = #{errorMessage},
+            UPDATED_BY = #{updatedBy},
+            UPDATED_AT = SYSDATE
+        WHERE 
+            CLAIM_ID = #{claimId}
+    </update>
+
+    <update id="updateClaimDetail" parameterType="com.proc.claim.model.entity.ClaimDetail">
+        UPDATE TB_CLAIM_DTL
+        SET 
+            QUANTITY = #{quantity},
+            UNIT_PRICE = #{unitPrice},
+            AMOUNT = #{amount},
+            STATUS_CODE = #{statusCode},
+            ERROR_CODE = #{errorCode},
+            ERROR_MESSAGE = #{errorMessage},
+            UPDATED_BY = #{updatedBy},
+            UPDATED_AT = SYSDATE
+        WHERE 
+            CLAIM_ID = #{claimId}
+            AND CLAIM_DETAIL_ID = #{claimDetailId}
+    </update>
+
+    <update id="updateClaimStatus">
+        UPDATE TB_CLAIM_MST
+        SET 
+            STATUS_CODE = #{statusCode},
+            UPDATED_AT = SYSDATE
+        WHERE 
+            CLAIM_ID = #{claimId}
+    </update>
+
+</mapper>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.proc.claim.mapper.QualificationMapper">
+
+    <select id="selectQualificationMaster" parameterType="string" resultType="com.proc.claim.model.entity.QualificationMaster">
+        SELECT 
+            QUALIFICATION_ID,
+            PATIENT_ID,
+            INSURANCE_TYPE,
+            START_DATE,
+            END_DATE,
+            STATUS_CODE,
+            CREATED_BY,
+            CREATED_AT,
+            UPDATED_BY,
+            UPDATED_AT
+        FROM 
+            TB_QUAL_MST
+        WHERE 
+            QUALIFICATION_ID = #{qualificationId}
+    </select>
+
+    <select id="selectPatientQualification" parameterType="string" resultType="com.proc.claim.model.entity.QualificationMaster">
+        SELECT 
+            QUALIFICATION_ID,
+            PATIENT_ID,
+            INSURANCE_TYPE,
+            START_DATE,
+            END_DATE,
+            STATUS_CODE
+        FROM 
+            TB_QUAL_MST
+        WHERE 
+            PATIENT_ID = #{patientId}
+            AND STATUS_CODE = '01'
+            AND SYSDATE BETWEEN START_DATE AND END_DATE
+    </select>
+
+    <select id="selectQualificationDetails" parameterType="string" resultType="com.proc.claim.model.entity.QualificationDetail">
+        SELECT 
+            QUALIFICATION_ID,
+            DETAIL_CODE,
+            DETAIL_VALUE,
+            DESCRIPTION,
+            VALID_FROM,
+            VALID_TO,
+            STATUS_CODE,
+            CREATED_BY,
+            CREATED_AT,
+            UPDATED_BY,
+            UPDATED_AT
+        FROM 
+            TB_QUAL_DTL
+        WHERE 
+            QUALIFICATION_ID = #{qualificationId}
+    </select>
+
+    <insert id="insertQualificationMaster" parameterType="com.proc.claim.model.entity.QualificationMaster">
+        INSERT INTO TB_QUAL_MST (
+            QUALIFICATION_ID,
+            PATIENT_ID,
+            INSURANCE_TYPE,
+            START_DATE,
+            END_DATE,
+            STATUS_CODE,
+            CREATED_BY,
+            CREATED_AT
+        ) VALUES (
+            #{qualificationId},
+            #{patientId},
+            #{insuranceType},
+            #{startDate},
+            #{endDate},
+            #{statusCode},
+            #{createdBy},
+            SYSDATE
+        )
+    </insert>
+
+    <insert id="insertQualificationDetail" parameterType="com.proc.claim.model.entity.QualificationDetail">
+        INSERT INTO TB_QUAL_DTL (
+            QUALIFICATION_ID,
+            DETAIL_CODE,
+            DETAIL_VALUE,
+            DESCRIPTION,
+            VALID_FROM,
+            VALID_TO,
+            STATUS_CODE,
+            CREATED_BY,
+            CREATED_AT
+        ) VALUES (
+            #{qualificationId},
+            #{detailCode},
+            #{detailValue},
+            #{description},
+            #{validFrom},
+            #{validTo},
+            #{statusCode},
+            #{createdBy},
+            SYSDATE
+        )
+    </insert>
+
+    <update id="updateQualificationStatus">
+        UPDATE TB_QUAL_MST
+        SET 
+            STATUS_CODE = #{statusCode},
+            UPDATED_AT = SYSDATE
+        WHERE 
+            QUALIFICATION_ID = #{qualificationId}
+    </update>
+
+</mapper>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.proc.claim.mapper.ReviewMapper">
+
+    <select id="selectReviewResult" resultType="com.proc.claim.model.dto.ReviewDTO">
+        SELECT 
+            CLAIM_ID,
+            CLAIM_DETAIL_ID,
+            REVIEW_CODE,
+            REVIEW_RESULT,
+            REVIEW_MESSAGE,
+            ADJUST_AMOUNT,
+            REVIEWER_ID,
+            REVIEW_DATE
+        FROM 
+            TB_REVIEW_RESULT
+        WHERE 
+            CLAIM_ID = #{claimId}
+            AND CLAIM_DETAIL_ID = #{claimDetailId}
+    </select>
+
+    <select id="selectClaimReviews" parameterType="string" resultType="com.proc.claim.model.dto.ReviewDTO">
+        SELECT 
+            CLAIM_ID,
+            CLAIM_DETAIL_ID,
+            REVIEW_CODE,
+            REVIEW_RESULT,
+            REVIEW_MESSAGE,
+            ADJUST_AMOUNT,
+            REVIEWER_ID,
+            REVIEW_DATE
+        FROM 
+            TB_REVIEW_RESULT
+        WHERE 
+            CLAIM_ID = #{claimId}
+    </select>
+
+    <insert id="insertReviewResult" parameterType="com.proc.claim.model.dto.ReviewDTO">
+        INSERT INTO TB_REVIEW_RESULT (
+            CLAIM_ID,
+            CLAIM_DETAIL_ID,
+            REVIEW_CODE,
+            REVIEW_RESULT,
+            REVIEW_MESSAGE,
+            ADJUST_AMOUNT,
+            REVIEWER_ID,
+            REVIEW_DATE
+        ) VALUES (
+            #{claimId},
+            #{claimDetailId},
+            #{reviewCode},
+            #{reviewResult},
+            #{reviewMessage},
+            #{adjustAmount},
+            #{reviewerId},
+            SYSDATE
+        )
+    </insert>
+
+    <update id="updateReviewResult" parameterType="com.proc.claim.model.dto.ReviewDTO">
+        UPDATE TB_REVIEW_RESULT
+        SET 
+            REVIEW_CODE = #{reviewCode},
+            REVIEW_RESULT = #{reviewResult},
+            REVIEW_MESSAGE = #{reviewMessage},
+            ADJUST_AMOUNT = #{adjustAmount},
+            REVIEWER_ID = #{reviewerId},
+            REVIEW_DATE = SYSDATE
+        WHERE 
+            CLAIM_ID = #{claimId}
+            AND CLAIM_DETAIL_ID = #{claimDetailId}
+    </update>
+
+</mapper>

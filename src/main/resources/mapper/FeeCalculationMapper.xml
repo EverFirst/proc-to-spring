@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.proc.claim.mapper.FeeCalculationMapper">
+
+    <select id="selectFeeCalculation" resultType="com.proc.claim.model.dto.FeeCalculationDTO">
+        SELECT 
+            CLAIM_ID,
+            CLAIM_DETAIL_ID,
+            TREATMENT_CODE,
+            ORIGINAL_AMOUNT,
+            ADJUSTED_AMOUNT,
+            FINAL_AMOUNT,
+            ADJUST_REASON
+        FROM 
+            TB_FEE_CALC
+        WHERE 
+            CLAIM_ID = #{claimId}
+            AND CLAIM_DETAIL_ID = #{claimDetailId}
+    </select>
+
+    <select id="selectClaimFeeCalculations" parameterType="string" resultType="com.proc.claim.model.dto.FeeCalculationDTO">
+        SELECT 
+            CLAIM_ID,
+            CLAIM_DETAIL_ID,
+            TREATMENT_CODE,
+            ORIGINAL_AMOUNT,
+            ADJUSTED_AMOUNT,
+            FINAL_AMOUNT,
+            ADJUST_REASON
+        FROM 
+            TB_FEE_CALC
+        WHERE 
+            CLAIM_ID = #{claimId}
+    </select>
+
+    <insert id="insertFeeCalculation" parameterType="com.proc.claim.model.dto.FeeCalculationDTO">
+        INSERT INTO TB_FEE_CALC (
+            CLAIM_ID,
+            CLAIM_DETAIL_ID,
+            TREATMENT_CODE,
+            ORIGINAL_AMOUNT,
+            ADJUSTED_AMOUNT,
+            FINAL_AMOUNT,
+            ADJUST_REASON
+        ) VALUES (
+            #{claimId},
+            #{claimDetailId},
+            #{treatmentCode},
+            #{originalAmount},
+            #{adjustedAmount},
+            #{finalAmount},
+            #{adjustReason}
+        )
+    </insert>
+
+    <update id="updateFeeCalculation" parameterType="com.proc.claim.model.dto.FeeCalculationDTO">
+        UPDATE TB_FEE_CALC
+        SET 
+            ADJUSTED_AMOUNT = #{adjustedAmount},
+            FINAL_AMOUNT = #{finalAmount},
+            ADJUST_REASON = #{adjustReason}
+        WHERE 
+            CLAIM_ID = #{claimId}
+            AND CLAIM_DETAIL_ID = #{claimDetailId}
+    </update>
+
+</mapper>
